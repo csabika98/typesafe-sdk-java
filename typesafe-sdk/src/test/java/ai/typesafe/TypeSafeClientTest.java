@@ -449,6 +449,17 @@ class TypeSafeClientTest {
         }
     }
 
+    @Test
+    void passesTheReleaseDateThroughWhateverItsFormat() {
+        String json = """
+                {"models":[{"name":"jev-latest","description":"d",\
+                "release_date":"2026-09-10T18:38:01.391457+00:00"}]}""";
+
+        try (TypeSafeClient client = client(StubHttpClient.always(200, json))) {
+            assertEquals("2026-09-10T18:38:01.391457+00:00", client.models().get(0).releaseDate());
+        }
+    }
+
     @ParameterizedTest
     @ValueSource(strings = {
             "{}",

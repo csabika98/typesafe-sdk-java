@@ -100,7 +100,8 @@ public final class Main {
         System.out.println("----------------");
 
         for (ModelCard model : await(client.modelsAsync())) {
-            System.out.printf("  %-16s %-12s %s%n", model.name(), model.releaseDate(), model.description());
+            System.out.printf("  %-14s %-11s %s%n",
+                    model.name(), releaseDate(model), model.description());
         }
         System.out.println();
     }
@@ -149,6 +150,15 @@ public final class Main {
         System.out.println("  usage      : " + result.usage().inputTokens() + " in / "
                 + result.usage().outputTokens() + " out");
         System.out.println();
+    }
+
+    private static String releaseDate(ModelCard model) {
+        String value = model.releaseDate();
+        try {
+            return java.time.OffsetDateTime.parse(value).toLocalDate().toString();
+        } catch (java.time.format.DateTimeParseException exception) {
+            return value.length() > 11 ? value.substring(0, 11) : value;
+        }
     }
 
     private static String describe(Answer answer) {
